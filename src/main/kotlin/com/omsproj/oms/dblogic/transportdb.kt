@@ -1,5 +1,6 @@
 package com.omsproj.oms.dblogic
 
+import com.omsproj.oms.productmodel.OrderDetails
 import com.omsproj.oms.productmodel.Transport
 import com.omsproj.oms.repository.TransportRepository
 import org.springframework.stereotype.Repository
@@ -8,12 +9,9 @@ import org.springframework.stereotype.Repository
 @Repository
 class Transportdb(private val transport: TransportRepository) {
 
-    fun createNewTransportRequest(trans: Transport) {
-        transport.save(trans)
+    fun getTransportStatusByOrderID(order: OrderDetails): Transport {
+        return transport.findByorder(order)
     }
-    fun getTransportByOrderId(id:Int): Transport? {
-        var transport:Transport? = transport.findByOrderID(id)
-        return transport
-    }
-
+    fun createNewOrder(order: Transport) =
+            transport.save(order)
 }

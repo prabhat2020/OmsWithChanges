@@ -9,42 +9,51 @@ import com.omsproj.oms.dblogic.Pricedb
 @Service
 class ProductService(private val prodserv: Productdb,private val priceserv: Pricedb) {
 
-    fun createNewProduct( prod: Product) = prodserv.createNewProduct(prod)
-
-    fun getProduct(id:Int,qty:Int) : String {
-        var result = " "
-        result = when {
-            prodserv.getProduct(id) == null -> {
-                "Product with $id doesn't exist"
+    companion object {
+        fun productAvailability(id: Int,qty:Int,prod: Product): String {
+            var result = " "
+            result = when {
+                prod == null -> {
+                    "Product with $id doesn't exist"
+                }
+                prod.QTY < qty -> {
+                    "Product with $id doesn't has sufficient quantity"
+                }
+                prod.VALID_TO < java.sql.Date.valueOf(LocalDate.now()) && prod.VALID_FROM > java.sql.Date.valueOf(LocalDate.now()) -> {
+                    "Product with $id is not valid"
+                }
+                else -> {
+                    "Available"
+                }
             }
-            prodserv.getProduct(id).QTY < qty -> {
-                "Product with $id doesn't has sufficient quantity"
-            }
-            prodserv.getProduct(id).VALID_TO < java.sql.Date.valueOf(LocalDate.now())  -> {
-                "Product with $id is not valid"
-            }
-            else -> {
-                prodserv.getProduct(id).toString()
-            }
+            return  result.toString()
         }
-        return result
     }
 
-    fun getTotalPrice(id:Int,qty:Int):String{
+    fun getProdByQty(id:Int,qty:Int):String{
+        var prod = prodserv.getProductByID(id)
+        var result = productAvailability(id,qty,prod)
+        return when (result) {
+            "Available" -> prod.toString()
+            else -> result.toString()
+        }
+    }
+    fun getProdTotalPrice(id:Int,qty:Int):String{
         var result = " "
+        var prod = prodserv.getProductByID(id)
         result = when {
-            prodserv.getProduct(id) == null -> {
+            prod == null -> {
                 "Product with $id doesn't exist"
             }
-            prodserv.getProduct(id).QTY < qty -> {
+            prod.QTY < qty -> {
                 "Product with $id doesn't has sufficient quantity"
             }
-            prodserv.getProduct(id).VALID_TO < java.sql.Date.valueOf(LocalDate.now())  -> {
+            prod.VALID_TO < java.sql.Date.valueOf(LocalDate.now()) && prod.VALID_FROM > java.sql.Date.valueOf(LocalDate.now())  -> {
                 "Product with $id is not valid"
             }
             else -> {
                 var totalPrice:Double = 0.0
-                totalPrice = qty * priceserv.getPrice(id)
+                totalPrice = qty * priceserv.getProductPriceByProductID(prod).AMOUNT
                 totalPrice.toString()
             }
         }

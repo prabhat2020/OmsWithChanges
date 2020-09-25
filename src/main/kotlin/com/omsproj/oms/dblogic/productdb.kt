@@ -11,14 +11,13 @@ import javax.validation.Valid
 @Repository
 class Productdb(private val prodcs: ProductRepository) {
 
-    fun createNewProduct(prod: Product): Product =
-            prodcs.save(prod)
+//    fun createNewProduct(prod: Product): Product =
+//            prodcs.save(prod)
 
-    fun getProduct(id:Int): Product {
+    fun getProductByID(id:Int):Product{
         return prodcs.findById(id).orElse(null)
     }
-
-    fun updateQuantity(id:Int,qty:Int){
-        prodcs.updateQuantity(id,qty)
+    fun updateQuantity(id: Int, updatedQty: Int) {
+        prodcs.updateQty(id,updatedQty)
     }
 }

@@ -9,21 +9,23 @@ import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
+import org.springframework.transaction.annotation.Transactional
 
 @Repository
 interface ProductRepository : JpaRepository<Product, Int> {
     @Modifying
-    @Query(value="Update Product p set p.QTY = :Quantity WHERE p.PRODUCT_ID = :ID",nativeQuery = true)
-    fun updateQuantity(@Param("ID") id: Int?,@Param("Quantity") quantity: Int?)
+    @Transactional
+    @Query(value="Update Product p set p.QTY = :Quantity WHERE p.PRODUCT_ID = :ID")
+    fun updateQty(@Param("ID") prod_id:Int, @Param("Quantity") newQty:Int)
 }
 @Repository
 interface ProductPriceRepository : JpaRepository<ProductPrice, Int> {
-    fun findAmtByProductId(@Param("PRODUCT_ID") prodId: Int?): Double
+    fun findByprod(prod: Product): ProductPrice
 }
 @Repository
 interface OrderDetailsRepository : JpaRepository<OrderDetails, Int>
 @Repository
 interface TransportRepository : JpaRepository<Transport, Int> {
-    fun findByOrderID(@Param("ORDER_ID") orderid: Int?): Transport?
+    fun findByorder(order: OrderDetails): Transport
 
 }

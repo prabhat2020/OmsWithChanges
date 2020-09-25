@@ -1,14 +1,12 @@
 package com.omsproj.oms.productmodel
 
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
+import javax.persistence.*
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
 @Entity
 data class OrderDetails (
+        @Column(name = "ORDER_ID")
         @Id @GeneratedValue(strategy = GenerationType.AUTO)
         val ORDER_ID: Int ,
 
@@ -16,6 +14,6 @@ data class OrderDetails (
         val PRODUCT_ID: Int ,
 
         @NotNull
-        val TOTAL_PRICE: Double
+        var TOTAL_PRICE: Double
 
 )

@@ -25,53 +25,52 @@ import javax.validation.Valid
 
         //Product related
 
-        @PostMapping("/product")
-        fun createNewProduct(@Valid @RequestBody prod: Product): Product =
-                productControl.createNewProduct(prod)
-
         @GetMapping("/product/{id}/{quantity}")
-        fun getProduct(@PathVariable(value="id") id:Int,@PathVariable(value = "quantity") qty:Int) : ResponseEntity<String> {
-            return  ResponseEntity.ok().body(productControl.getProduct(id,qty))
+        fun getProductByQty(@PathVariable(value = "id") id: Int, @PathVariable(value = "quantity") qty: Int): ResponseEntity<String> {
+            return ResponseEntity.ok().body(productControl.getProdByQty(id, qty))
         }
-
         @GetMapping("/totalprice/{id}/{quantity}")
         fun getProductTotalPrice(@PathVariable(value = "id") id:Int,@PathVariable(value = "quantity") qty:Int): ResponseEntity<String>  {
-            return ResponseEntity.ok().body(productControl.getTotalPrice(id,qty))
+            return ResponseEntity.ok().body(productControl.getProdTotalPrice(id,qty))
         }
 
 
    //Price Related
   //add Price
-        @PostMapping("/price")
-        fun createPrice(@Valid @RequestBody price:ProductPrice) : ResponseEntity<String> {
-      priceControl.createPrice(price)
-      return ResponseEntity.ok().body("Price details added")
-  }
+   @PostMapping("/product")
+   fun createNewProduct(@Valid @RequestBody prod: ProductPrice):ResponseEntity<String> {
+       priceControl.addProductPrice(prod)
+       return ResponseEntity.ok().body("Product Added Successfully")
+   }
         //Get Price
-        @GetMapping("/price/{id}/{productId}")
-        fun getPrice(@PathVariable(value="id") id:Int,@PathVariable(value = "productId") productId:Int) : ResponseEntity<String> {
-            return  ResponseEntity.ok().body(priceControl.getPrice(id,productId))
-        }
+//        @GetMapping("/price/{id}/{productId}")
+//        fun getPrice(@PathVariable(value="id") id:Int,@PathVariable(value = "productId") productId:Int) : ResponseEntity<String> {
+//            return  ResponseEntity.ok().body(priceControl.getPrice(id,productId))
+//        }
 
 
 
         //orderrelated
 
         //insert order
-        @PostMapping("/order/{id}/{quantity}")
-        fun createOrder(@PathVariable(value = "id") id:Int,@PathVariable(value = "quantity") qty:Int) =
-        ResponseEntity.ok().body(orderControl.createOrder(id,qty))
+//        @PostMapping("/order/{id}/{quantity}")
+//        fun createOrder(@PathVariable(value = "id") id:Int,@PathVariable(value = "quantity") qty:Int) =
+//        ResponseEntity.ok().body(orderControl.createOrder(id,qty))
 
         @GetMapping("/order/{id}/")
-        fun getOrder(@PathVariable(value = "id") id:Int): ResponseEntity<String>  {
-            return ResponseEntity.ok().body(orderControl.getOrder(id))
+        fun getOrderStatusByOrderID(@PathVariable(value = "id") id:Int): ResponseEntity<String>  {
+            return ResponseEntity.ok().body(orderControl.getOrderByID(id))
         }
 
         //transport thing
 
-        @GetMapping("/transport/{orderid}")
-        fun getTransportByOrderId(@PathVariable(value = "orderid") id:Int): ResponseEntity<String>  {
+        @GetMapping("/transport/{orderId}")
+        fun getTransportByOrderId(@PathVariable(value = "orderId") id:Int): ResponseEntity<String>  {
             return ResponseEntity.ok().body(transportControl.getTransportByOrderId(id))
+        }
+        @PostMapping("/placeorder/{quantity}")
+        fun createNewOrder(@Valid @RequestBody order: Transport,@PathVariable(value = "quantity") qty:Int): ResponseEntity<String> {
+            return ResponseEntity.ok().body(transportControl.createNewOrder(order,qty))
         }
     }
 

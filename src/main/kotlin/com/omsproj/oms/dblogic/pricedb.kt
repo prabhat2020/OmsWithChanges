@@ -12,10 +12,11 @@ import javax.validation.Valid
 @Repository
 class Pricedb(private val pricedcs: ProductPriceRepository) {
 
-    fun createPrice(price: ProductPrice): ProductPrice =
-            pricedcs.save(price)
+    fun createPrice(price: ProductPrice) {
+        pricedcs.save(price)
+    }
 
-    fun getPrice(id:Int): Double {
-        return pricedcs.findAmtByProductId(id)
+    fun getProductPriceByProductID(prod:Product):ProductPrice{
+        return pricedcs.findByprod(prod)
     }
 }

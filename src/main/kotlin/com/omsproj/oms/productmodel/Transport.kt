@@ -6,13 +6,14 @@ import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
 @Entity
-@NamedQuery(name="Transport.findByOrderID", query="SELECT p FROM Transport p WHERE p.ORDER_ID = :ORDER_ID")
+
 data class Transport(
         @Id @GeneratedValue(strategy = GenerationType.AUTO)
         val ID: Int = 0,
 
-        @NotNull
-        val ORDER_ID: Int = 0,
+        @OneToOne(cascade= [CascadeType.ALL])
+        @JoinColumn(name = "ORDER_ID")
+        var order:OrderDetails,
 
         @NotNull
         val STAGE_ID: Int = 0,
